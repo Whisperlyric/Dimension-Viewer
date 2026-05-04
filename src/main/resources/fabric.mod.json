@@ -1,0 +1,37 @@
+{
+    "schemaVersion": 1,
+    "id": "dimensionviewer",
+    "version": "${version}",
+    "name": "Dimension Viewer",
+    "description": "A mod that displays player dimensions in the tab list and chat",
+    "authors": [
+        "Ewan Selkirk"
+    ],
+    "contact": {
+        "homepage": "https://github.com/Ewan-Selkirk/Dimension-Viewer",
+        "sources": "https://github.com/Ewan-Selkirk/Dimension-Viewer"
+    },
+    "license": "MIT",
+    "icon": "dimensionviewer.png",
+    "environment": "*",
+    "entrypoints": {
+        "client": [
+            "dev.stick_stack.dimensionviewer.client.DimensionViewerClient"
+        ],
+        "server": [
+            "dev.stick_stack.dimensionviewer.DimensionViewerFabric"
+        ]
+    },
+    "mixins": [
+        "dimensionviewer.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.18.4",
+        "fabric-api": "*",
+        "minecraft": ">=1.21.11",
+        "java": ">=21"
+    },
+    "suggests": {
+        "modmenu": "*"
+    }
+}

@@ -1,0 +1,26 @@
+package dev.stick_stack.dimensionviewer;
+
+import net.minecraft.util.Formatting;
+
+import java.util.Locale;
+
+public class ConfigCommon {
+
+    public static final String modidRegex = "([a-z_]+:.+)";
+    public static final String allowedColorsComment = "\nAllowed Values: DARK_RED, RED, GOLD, YELLOW, DARK_GREEN, GREEN, " +
+            "AQUA, DARK_AQUA, DARK_BLUE, BLUE, LIGHT_PURPLE, DARK_PURPLE, WHITE, GRAY, DARK_GRAY, BLACK" +
+            "\nOr any custom colours defined in `customColors`";
+
+    public static String DEFAULT_LIST_FORMAT = "%i<%d>";
+
+    public static String DEFAULT_COLOR = Formatting.GOLD.getName().toUpperCase(Locale.ROOT);
+    public static String OVERWORLD_COLOR = Formatting.DARK_GREEN.getName().toUpperCase(Locale.ROOT);
+    public static String NETHER_COLOR = Formatting.DARK_RED.getName().toUpperCase(Locale.ROOT);
+    public static String END_COLOR = Formatting.DARK_PURPLE.getName().toUpperCase(Locale.ROOT);
+
+    public static boolean PER_DIM_COLOR = true;
+    public static boolean DIM_IN_CHAT_NAME = true;
+    public static boolean CHAT_DIM_HOVER = true;
+    public static boolean ENABLE_ALIASES = true;
+
+}
