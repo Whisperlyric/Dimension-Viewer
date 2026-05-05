@@ -1,10 +1,10 @@
 package dev.stick_stack.dimensionviewer.platform.services;
 
 import dev.stick_stack.dimensionviewer.CommonUtils;
-import net.minecraft.server.PlayerManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.server.players.PlayerList;
 
 public interface IConfigHelper {
 
@@ -43,7 +43,7 @@ public interface IConfigHelper {
 
     void Reload();
 
-    void RefreshPlayerData(PlayerManager players);
+    void RefreshPlayerData(PlayerList players);
 
     boolean HasAlias(String dimId);
 }

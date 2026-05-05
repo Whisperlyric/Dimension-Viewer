@@ -1,27 +1,26 @@
 package dev.stick_stack.dimensionviewer;
 
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.util.Identifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
 public abstract class PlayerListHandler {
 
-    public static final List<PlayerEntity> playerList = new ArrayList<>();
+    public static final List<Player> playerList = new ArrayList<>();
 
-    public MutableText makeDimensionComponent(PlayerEntity player, String format) {
-        Identifier dimension = player.getEntityWorld().getRegistryKey().getValue();
+    public MutableComponent makeDimensionComponent(Player player, String format) {
+        Identifier dimension = player.level().dimension().identifier();
 
         return extractTokensFromFormat(format, dimension);
     }
 
-    private MutableText extractTokensFromFormat(String format, Identifier dimension) {
+    private MutableComponent extractTokensFromFormat(String format, Identifier dimension) {
         Style style = checkTokens(null, format);
         format = replaceTokens(format);
 
@@ -34,7 +33,7 @@ public abstract class PlayerListHandler {
         ));
 
         format = format.replace("%d", aliasedDim);
-        return MutableText.of(new PlainTextContent.Literal(format)).setStyle(style);
+        return MutableComponent.create(new PlainTextContents.LiteralContents(format)).setStyle(style);
     }
 
 
@@ -50,7 +49,7 @@ public abstract class PlayerListHandler {
         inStyle = inStyle
                 .withItalic(inStyle.isItalic() || useItalic)
                 .withBold(inStyle.isBold() || useBold)
-                .withUnderline(inStyle.isUnderlined() || useUnderline)
+                .withUnderlined(inStyle.isUnderlined() || useUnderline)
                 .withStrikethrough(inStyle.isStrikethrough() || useStrikethrough)
                 .withObfuscated(inStyle.isObfuscated() || useObfuscate);
 

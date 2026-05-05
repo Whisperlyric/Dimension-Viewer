@@ -1,22 +1,20 @@
 package dev.stick_stack.dimensionviewer;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import java.util.EnumSet;
 
-public class DimensionViewerFabric implements DedicatedServerModInitializer {
+public class DimensionViewerFabric implements ModInitializer {
 
     @Override
-    public void onInitializeServer() {
+    public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register((server -> ConfigFabric.get()));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -39,11 +37,11 @@ public class DimensionViewerFabric implements DedicatedServerModInitializer {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> CustomCommands.RegisterCommands(dispatcher)));
     }
 
-    private static void refreshDisplayNames(ServerPlayerEntity player) {
-        if (player != null && player.getEntityWorld() != null && player.getEntityWorld().getServer() != null) {
-            PlayerManager playerManager = player.getEntityWorld().getServer().getPlayerManager();
-            EnumSet<PlayerListS2CPacket.Action> actions = EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
-            playerManager.sendToAll(new PlayerListS2CPacket(actions, playerManager.getPlayerList()));
+    private static void refreshDisplayNames(ServerPlayer player) {
+        if (player != null && player.level() != null && player.level().getServer() != null) {
+            PlayerList playerManager = player.level().getServer().getPlayerList();
+            EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
+            playerManager.broadcastAll(new ClientboundPlayerInfoUpdatePacket(actions, playerManager.getPlayers()));
         }
     }
 }

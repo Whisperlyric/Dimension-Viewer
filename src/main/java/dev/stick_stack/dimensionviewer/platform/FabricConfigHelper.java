@@ -2,10 +2,10 @@ package dev.stick_stack.dimensionviewer.platform;
 
 import dev.stick_stack.dimensionviewer.*;
 import dev.stick_stack.dimensionviewer.platform.services.IConfigHelper;
-import net.minecraft.server.PlayerManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.server.players.PlayerList;
 
 public class FabricConfigHelper implements IConfigHelper {
 
@@ -252,7 +252,7 @@ public class FabricConfigHelper implements IConfigHelper {
     }
 
     @Override
-    public void RefreshPlayerData(PlayerManager players) {
+    public void RefreshPlayerData(PlayerList players) {
         FabricUtils.refreshDisplayNames(players);
     }
 

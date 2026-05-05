@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ConfigFabric {
 
@@ -169,9 +169,9 @@ public class ConfigFabric {
                                 loadConfig();
 
                                 if (!PlayerListHandler.playerList.isEmpty()) {
-                                    ServerPlayerEntity firstPlayer = (ServerPlayerEntity) PlayerListHandler.playerList.getFirst();
+                                    ServerPlayer firstPlayer = (ServerPlayer) PlayerListHandler.playerList.getFirst();
                                     FabricUtils.refreshDisplayNames(
-                                            firstPlayer.getEntityWorld().getServer().getPlayerManager()
+                                            firstPlayer.level().getServer().getPlayerList()
                                     );
                                 } else {
                                     Constants.LOG.info("Skipping display name refresh as no players are detected on the server");

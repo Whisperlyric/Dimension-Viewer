@@ -15,11 +15,11 @@
     "icon": "dimensionviewer.png",
     "environment": "*",
     "entrypoints": {
+        "main": [
+            "dev.stick_stack.dimensionviewer.DimensionViewerFabric"
+        ],
         "client": [
             "dev.stick_stack.dimensionviewer.client.DimensionViewerClient"
-        ],
-        "server": [
-            "dev.stick_stack.dimensionviewer.DimensionViewerFabric"
         ]
     },
     "mixins": [

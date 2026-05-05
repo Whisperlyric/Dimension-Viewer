@@ -1,8 +1,5 @@
 package dev.stick_stack.dimensionviewer;
 
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.PlayerManager;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -10,12 +7,14 @@ import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.EnumSet;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.players.PlayerList;
 
 public class FabricUtils {
 
-    public static void refreshDisplayNames(PlayerManager players) {
-        EnumSet<PlayerListS2CPacket.Action> actions = EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
-        players.sendToAll(new PlayerListS2CPacket(actions, players.getPlayerList()));
+    public static void refreshDisplayNames(PlayerList players) {
+        EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
+        players.broadcastAll(new ClientboundPlayerInfoUpdatePacket(actions, players.getPlayers()));
     }
 
 

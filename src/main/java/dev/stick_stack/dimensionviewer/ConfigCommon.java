@@ -1,8 +1,7 @@
 package dev.stick_stack.dimensionviewer;
 
-import net.minecraft.util.Formatting;
-
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 
 public class ConfigCommon {
 
@@ -13,10 +12,10 @@ public class ConfigCommon {
 
     public static String DEFAULT_LIST_FORMAT = "%i<%d>";
 
-    public static String DEFAULT_COLOR = Formatting.GOLD.getName().toUpperCase(Locale.ROOT);
-    public static String OVERWORLD_COLOR = Formatting.DARK_GREEN.getName().toUpperCase(Locale.ROOT);
-    public static String NETHER_COLOR = Formatting.DARK_RED.getName().toUpperCase(Locale.ROOT);
-    public static String END_COLOR = Formatting.DARK_PURPLE.getName().toUpperCase(Locale.ROOT);
+    public static String DEFAULT_COLOR = ChatFormatting.GOLD.getName().toUpperCase(Locale.ROOT);
+    public static String OVERWORLD_COLOR = ChatFormatting.DARK_GREEN.getName().toUpperCase(Locale.ROOT);
+    public static String NETHER_COLOR = ChatFormatting.DARK_RED.getName().toUpperCase(Locale.ROOT);
+    public static String END_COLOR = ChatFormatting.DARK_PURPLE.getName().toUpperCase(Locale.ROOT);
 
     public static boolean PER_DIM_COLOR = true;
     public static boolean DIM_IN_CHAT_NAME = true;

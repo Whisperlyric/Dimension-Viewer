@@ -2,17 +2,17 @@ package dev.stick_stack.dimensionviewer.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.stick_stack.dimensionviewer.*;
-import net.minecraft.util.Formatting;
-import net.minecraft.text.Text;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.util.Identifier;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,16 +20,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerPlayerEntity.class)
+@Mixin(ServerPlayer.class)
 public abstract class MixinServerPlayer extends MixinPlayer {
 
-    protected MixinServerPlayer(EntityType<? extends LivingEntity> entityType, World world) {
+    protected MixinServerPlayer(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Unique
-    private static Text createDimensionComponent(ServerPlayerEntity player, MutableText originalName) {
-        Identifier dimension = player.getEntityWorld().getRegistryKey().getValue();
+    private static Component createDimensionComponent(ServerPlayer player, MutableComponent originalName) {
+        Identifier dimension = player.level().dimension().identifier();
         String dimSource = CommonUtils.toTitleCase(CommonUtils.splitResourceLocation(dimension, 0));
         final PlayerListHandlerFabric handler = new PlayerListHandlerFabric();
 
@@ -56,18 +56,18 @@ public abstract class MixinServerPlayer extends MixinPlayer {
             style = tryGetColor(ConfigFabric.get().DEFAULT_COLOR);
         }
 
-        MutableText dimComponent = handler.makeDimensionComponent(player, ConfigFabric.get().LIST_FORMAT);
-        dimComponent = dimComponent.fillStyle(style);
+        MutableComponent dimComponent = handler.makeDimensionComponent(player, ConfigFabric.get().LIST_FORMAT);
+        dimComponent = dimComponent.withStyle(style);
 
         if (ConfigFabric.get().CHAT_DIM_HOVER) {
             dimComponent = dimComponent.setStyle(dimComponent.getStyle().withHoverEvent(
-                    new HoverEvent.ShowText(Text.literal(dimSource))
+                    new HoverEvent.ShowText(Component.literal(dimSource))
             ));
         }
 
-        MutableText spacer = MutableText.of(new PlainTextContent.Literal(" "));
+        MutableComponent spacer = MutableComponent.create(new PlainTextContents.LiteralContents(" "));
         if (ConfigFabric.get().DIM_POSITION == CommonUtils.DimensionPosition.PREPEND) {
-            spacer = spacer.setStyle(Style.EMPTY.withColor(Formatting.WHITE));
+            spacer = spacer.setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE));
             spacer = spacer.append(originalName);
             return dimComponent.append(spacer);
         } else {
@@ -79,7 +79,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
     @Unique
     private static Style tryGetColor(String color) {
         try {
-            Formatting format = Formatting.valueOf(color);
+            ChatFormatting format = ChatFormatting.valueOf(color);
             return Style.EMPTY.withColor(format);
         } catch (IllegalArgumentException exception) {
             for (String entry : ConfigFabric.get().CUSTOM_COLORS) {
@@ -104,17 +104,17 @@ public abstract class MixinServerPlayer extends MixinPlayer {
     }
 
     @Override
-    protected void onGetDisplayName(CallbackInfoReturnable<MutableText> cir) {
+    protected void onGetDisplayName(CallbackInfoReturnable<MutableComponent> cir) {
         if (!ConfigFabric.get().DIM_IN_CHAT_NAME) return;
 
-        ServerPlayerEntity self = (ServerPlayerEntity) (Object) this;
+        ServerPlayer self = (ServerPlayer) (Object) this;
         cir.setReturnValue(createDimensionComponent(self, cir.getReturnValue()).copy());
     }
 
-    @ModifyReturnValue(method = "getPlayerListName", at = @At("RETURN"))
-    private Text onGetPlayerListName(@Nullable Text component) {
-        ServerPlayerEntity self = (ServerPlayerEntity) (Object) this;
-        MutableText nameComponent = getName().copy();
+    @ModifyReturnValue(method = "getTabListDisplayName", at = @At("RETURN"))
+    private Component onGetPlayerListName(@Nullable Component component) {
+        ServerPlayer self = (ServerPlayer) (Object) this;
+        MutableComponent nameComponent = getName().copy();
         return createDimensionComponent(self, nameComponent);
     }
 }

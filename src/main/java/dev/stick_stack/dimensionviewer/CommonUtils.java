@@ -1,8 +1,7 @@
 package dev.stick_stack.dimensionviewer;
 
-import net.minecraft.util.Identifier;
-
 import java.util.Locale;
+import net.minecraft.resources.Identifier;
 
 public class CommonUtils {
 
